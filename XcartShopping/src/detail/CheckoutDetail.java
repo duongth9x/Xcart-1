@@ -1,13 +1,6 @@
 package detail;
 
-public class XCartDetail {
-
-	private String email;
-
-	private String pass;
-
-	private String search;
-
+public class CheckoutDetail {
 	private String firstName;
 
 	private String lastName;
@@ -22,11 +15,8 @@ public class XCartDetail {
 
 	private String phone;
 
-	public XCartDetail(String email, String pass, String search, String firstName, String lastName, String address,
-			String city, String country, String state, String phone) {
-		this.email = email;
-		this.pass = pass;
-		this.search = search;
+	public CheckoutDetail(String firstName, String lastName, String address, String city, String country, String state,
+			String phone) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
@@ -34,19 +24,6 @@ public class XCartDetail {
 		this.country = country;
 		this.state = state;
 		this.phone = phone;
-
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public String getPass() {
-		return pass;
-	}
-
-	public String getSearch() {
-		return search;
 	}
 
 	public String getFirstName() {
