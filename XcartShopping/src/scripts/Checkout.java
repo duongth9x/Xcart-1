@@ -2,14 +2,15 @@ package scripts;
 
 import java.util.concurrent.TimeUnit;
 
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-
-import pages.XCartPage;
+import builder.XCartDetailBuilder;
+import detail.XCartDetail;
+import event.XcartEvent;
 
 public class Checkout {
 	WebDriver driver;
@@ -18,52 +19,66 @@ public class Checkout {
 	public void setup() {
 
 		driver = new FirefoxDriver();
+		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		driver.get("http://localhost/xcart/");
 
 	}
 
 	@Test(priority = 0)
-	public void test_Home_Page_Appear_Correct() throws InterruptedException {
-		XCartPage user = new XCartPage(driver);
-		user.clickLinkSign();
-		user.enterEmailTextbox("ltthuong1@gmail.com");
-		user.enterPassTextbox("1");
-		user.clickSignButton();
-		
+	public void test_Checkout() throws InterruptedException {
+		XCartDetailBuilder builder = new XCartDetailBuilder();
+
+		builder.withEmail("huong@gmail.com").withPass("1").withSearch("iphone").withFirstName("aa").withLastName("bb");
+		builder.withCity("sg").withAddress("sagsg").withCountry("United States").withPhone("824")
+				.withState("California");
+
+		XCartDetail detail = builder.build();
+
+		XcartEvent user = new XcartEvent(driver, detail);
+		user.navigateToLogInForm();
+
 		Thread.sleep(3000);
-		
-		//enter keywork into Search textbox
-		user.enterSearchTextbox("iphone");
-		
-		Thread.sleep(2000);
-		//click button Search
-		user.clickSearchButton();
-		
-		//click select product
-		user.clickSelectProduct();
-		
-		//add product to Cart 
-		user.clickAddtoCartButton();
-		
+		user.LogIn();
+
 		Thread.sleep(3000);
-		//click into Buy now with PayPay Button
-		user.clickBuyButton();
-		
+		user.navigateToProductList();
+
 		Thread.sleep(3000);
-		//enter full information include: first name, last name,..
-		user.enterFirstNameTextbox("lt");
-		user.enterLastNameTextbox("bb");
-		user.enterAddressTextbox("hidhdj");
-		user.enterCityTextbox("hihi");
-		user.enterCountryTextbox("United States");
-		user.enterStateTextbox("California");
-		user.enterPhoneTextbox("068568");
-		
-		//click into Place Order Button
-		user.clickPlaceOrderButton();
-		
-		 //close the browser
-        driver.close();
+		user.SearchProduct();
+
+		Thread.sleep(3000);
+		user.navigateToCheckoutForm();
+
+		Thread.sleep(3000);
+		user.FillCheckoutForm();
+
 	}
+
+	// @Test(priority = 1)
+	// public void test_Checkout1() throws InterruptedException {
+	// XCartDetailBuilder builder = new XCartDetailBuilder();
+	//
+	// builder.withEmail("huong@gmail.com").withPass("1").withSearch("iphone").withFirstName("HOANGNL").withLastName("DEPTRAI");
+	// builder.withCity("sg").withAddress("sagsg").withCountry("United
+	// States").withPhone("824")
+	// .withState("California");
+	//
+	// XCartDetail detail = builder.build();
+	//
+	// XcartEvent user = new XcartEvent(driver, detail);
+	// user.navigateToLogInForm();
+	// user.LogIn();
+	// user.navigateToProductList();
+	// user.SearchProduct();
+	// user.navigateToCheckoutForm();
+	// user.FillCheckoutForm();
+
+	// }
+
+	@AfterTest
+	public void teardown() {
+		driver.close();
+	}
+
 }
